@@ -1,0 +1,17 @@
+.Container{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.FirstRow{ 
+    display: flex;
+    margin-bottom: 10px;
+}
+.SecondRow{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 80%;
+    justify-content: center;
+}
