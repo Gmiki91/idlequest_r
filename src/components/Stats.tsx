@@ -1,6 +1,12 @@
-export const Stats = () => (<ul>
-    <li>Erő: 10</li>
-    <li>Ügyesség: 10</li>
-    <li>Élet: 10</li>
+type StatProp={
+    strength: number;
+    dexterity: number;
+    health: number;
+}
+
+export const Stats = (props: StatProp) => (<ul>
+    <li>Erő: {props.strength}</li>
+    <li>Ügyesség: {props.dexterity}</li>
+    <li>Élet: {props.health}</li>
 </ul>
 );

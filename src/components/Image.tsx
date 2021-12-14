@@ -2,8 +2,6 @@ type ImageProps = {
     url: string
 }
 
-
-
 export const Image = (props: ImageProps) =>
 (<>
     <img  
