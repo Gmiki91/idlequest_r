@@ -1,65 +1,54 @@
-import { useContext, useEffect, useState } from 'react';
-import { MongoDbContext } from '../App';
+import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import { Equipment } from "../components/Equipment";
 import { Image } from "../components/Image";
-import { ItemList } from "../components/ItemList";
 import { Stats } from "../components/Stats";
 import { User } from '../models/User';
 import { Body } from '../models/Body'
 import './CharPage.css';
+import { ItemList } from '../components/ItemList';
+
+const userId = '61b8a1b9668c7872bc8b26e8';
 
 const CharPage = () => {
+
     const [user, setUser] = useState<User | null>(null);
     const [body, setBody] = useState<Body | null>(null);
-    const mongodb = useContext(MongoDbContext);
-
-
 
     useEffect(() => {
-        if (mongodb) {
-            const userCollection = mongodb.db("idlequest").collection("users");
-            const bodyCollection = mongodb.db("idlequest").collection("bodies");
-            const getUser = async () => await userCollection.findOne({ name: 'Miking' });
-            const getBody = async (id: string) => await bodyCollection.findOne({ _id: id });
+        init();
+    })
 
-            getUser().then((user: User) => {
-                setUser(user);
-                getBody(user.bodyId)
-                    .then(body =>setBody(body))
-                    .catch(err => console.log(err.message))
-            })
-        }
-    }, [mongodb]);
+    const init = useCallback(async () => {
+        const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`)
+            .then(response => {
+                setUser(response.data);
+                return response.data;
+            });
+        axios.get<Body>(`http://192.168.31.203:3030/api/users/${userData.body._id}`)
+            .then(result => setBody({ ...result.data, ...userData.body })); //updating database Body with user Body 
+    }, []);
 
-
-    return (
+    return (body && user ?
         <div className="Container">
-            {body?
             <div className="FirstRow">
-                <Stats 
-                dexterity={body.dexterity}
-                strength={body.strength}
-                health={body.health}
+                <Stats
+                    strength={body.strength}
+                    dexterity={body.dexterity}
+                    health={body.health}
                 />
                 <Image url={body.pic} />
-                <Equipment 
-                headEquipment={body.headEquipment}
-                leftArmEquipment={body.leftArmEquipment}
-                rightArmEquipment={body.rightArmEquipment}
-                bodyEquipment={body.bodyEquipment}
-                leftWeapon={body.leftWeapon}
-                rightWeapon={body.rightWeapon}/>
+                <Equipment
+                    equipment={body.equipment}
+                />
             </div>
-            :null}
-            {user?
             <div className="SecondRow">
-                <ItemList itemList={user.itemIdList}/>
+                <ItemList itemList={user.itemList} />
+
             </div>
-            :null}
         </div>
-    );
+        : <div>spinner</div>
+    )
 }
-
-
 
 export default CharPage;

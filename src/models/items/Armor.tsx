@@ -1,6 +1,5 @@
 import { Item } from "./Item";
 
-export interface Weapon extends Item{
+export interface Armor extends Item{
     type: 'HEAD' | 'BODY' | 'LEFT_ARM' | 'RIGHT_ARM';
-    health: number;
 }

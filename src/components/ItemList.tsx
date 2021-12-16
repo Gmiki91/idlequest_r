@@ -1,10 +1,20 @@
+import axios from 'axios';
+import { Item } from '../models/items/Item';
+import { ItemWrapper } from "../models/wrappers/ItemWrapper";
+
 type ItemListProp = {
-    itemList: string[] | null;
+    itemList: ItemWrapper[];
 }
 
-export const ItemList = (props: ItemListProp) => {
-    const items = props.itemList;
-    const list = items ? items.map(item => <p>{item}</p>) : null;
+export const ItemList = ({ itemList }: ItemListProp) => {
+    const ids: string[] = itemList.map(item => item._id);
+    const list: JSX.Element[] = [];
+    axios.get<Item[]>(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
+        response.data.forEach(item => {
+            list.push(<p key={item._id}>{item.name}</p>);
+        });
+    });
+
     return (<>
         {list}
     </>);

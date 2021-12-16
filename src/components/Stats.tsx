@@ -1,12 +1,12 @@
-type StatProp={
-    strength: number;
-    dexterity: number;
-    health: number;
+type StatProps={
+    strength:number;
+    dexterity:number;
+    health:number;
 }
 
-export const Stats = (props: StatProp) => (<ul>
-    <li>Erő: {props.strength}</li>
-    <li>Ügyesség: {props.dexterity}</li>
-    <li>Élet: {props.health}</li>
-</ul>
+export const Stats = ({strength,dexterity,health}: StatProps) => (<ul>
+    <li>Erő: {strength}</li>
+    <li>Ügyesség: {dexterity}</li>
+    <li>Élet: {health}</li>
+    </ul>
 );
