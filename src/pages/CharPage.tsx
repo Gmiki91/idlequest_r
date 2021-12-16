@@ -15,20 +15,21 @@ const CharPage = () => {
     const [user, setUser] = useState<User | null>(null);
     const [body, setBody] = useState<Body | null>(null);
 
-    useEffect(() => {
-        init();
-    })
-
     const init = useCallback(async () => {
         const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`)
             .then(response => {
                 setUser(response.data);
                 return response.data;
             });
-        axios.get<Body>(`http://192.168.31.203:3030/api/users/${userData.body._id}`)
+        axios.get<Body>(`http://192.168.31.203:3030/api/bodies/${userData.body._id}`)
             .then(result => setBody({ ...result.data, ...userData.body })); //updating database Body with user Body 
     }, []);
 
+    useEffect(() => {
+        init();
+    },[init])
+
+   
     return (body && user ?
         <div className="Container">
             <div className="FirstRow">
@@ -39,12 +40,11 @@ const CharPage = () => {
                 />
                 <Image url={body.pic} />
                 <Equipment
-                    equipment={body.equipment}
+                    equipment={user.equipmentList}
                 />
             </div>
             <div className="SecondRow">
                 <ItemList itemList={user.itemList} />
-
             </div>
         </div>
         : <div>spinner</div>

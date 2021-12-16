@@ -5,12 +5,27 @@ const Weapon = require('../models/weapon');
 const Armor = require('../models/armor');
 
 router.get('/',async(req,res)=>{   
+    const weapon1 = new Weapon({
+        type:'oneHanded',
+        name:'fakés',
+        price:7,
+        level:1,
+        durability:4,
+        damage:2
+    });
+    const armor1 = new Armor({
+        name:'sapesz',
+        type:'head',
+        price:5,
+        level:1,
+        durability:5,
+       
+    });
     try{
-        const [armors,weapons] = await Promise.all([
-            Weapon.find(),
-            Armor.find(),
+        const items = await Promise.all([
+            Item.find()
         ]);
-        return res.status(200).json({status: 'success', armors:armors, weapons:weapons});
+        return res.status(200).json({status: 'success', items:items});
     }catch(e){
         return res.status(500).json({status: 'error', message:e.message});
     }

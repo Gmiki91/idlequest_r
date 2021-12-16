@@ -4,7 +4,7 @@ const Item = require('./item');
 const ArmorSchema = mongoose.Schema({
     type:{
         type:String,
-        enum:['head', 'body', 'leftHand', 'rightHand']
+        enum:['head', 'body', 'leftArm', 'rightArm']
     },
 });
 

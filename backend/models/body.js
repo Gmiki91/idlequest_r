@@ -11,7 +11,6 @@ const bodySchema = mongoose.Schema({
     leftArm: Boolean,
     rightArm: Boolean,
     head: Boolean,
-    equipment:[Object]
 }, { collection: 'bodies' }
 );
 

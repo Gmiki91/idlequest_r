@@ -14,11 +14,15 @@ const userSchema = mongoose.Schema({
     },
     bodyList: [{
         _id:String,
-        qty:Number
+        health: Number,
+        leftArm:Boolean,
+        rightArm:Boolean,
+        head:Boolean,
     }],
     equipmentList: [{
         _id:String,
-        durability:Number
+        durability:Number,
+        hand:'left' | 'right' 
     }],
     itemList: [{
         _id:String,

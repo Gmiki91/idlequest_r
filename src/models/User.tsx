@@ -10,4 +10,5 @@ export interface User {
     body: BodyWrapper ;
     bodyList: [BodyWrapper];
     itemList: [ItemWrapper];
+    equipmentList:[ItemWrapper];
 }

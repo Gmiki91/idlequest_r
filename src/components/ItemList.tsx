@@ -9,13 +9,11 @@ type ItemListProp = {
 export const ItemList = ({ itemList }: ItemListProp) => {
     const ids: string[] = itemList.map(item => item._id);
     const list: JSX.Element[] = [];
-    axios.get<Item[]>(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
-        response.data.forEach(item => {
+    axios.get(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
+        response.data.items.forEach((item: Item) => {
             list.push(<p key={item._id}>{item.name}</p>);
         });
     });
 
-    return (<>
-        {list}
-    </>);
+    return (<>{list}</>);
 }
