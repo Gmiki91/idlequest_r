@@ -6,14 +6,18 @@ import { ItemWrapper } from '../models/wrappers/ItemWrapper';
 import { Weapon } from '../models/items/Weapon';
 
 type EquipmentProp = {
-    equipment: ItemWrapper[]
+    equipment: ItemWrapper[];
+}
+
+type ArmorSet = {
+    'head':Armor;
+    'body':Armor;
+    'leftArm':Armor;
+    'rightArm':Armor;
 }
 
 export const Equipment = (props: EquipmentProp) => {
-    const [head, setHead] = useState<Item>();
-    const [body, setBody] = useState<Item>();
-    const [leftArm, setLeftArm] = useState<Item>();
-    const [rightArm, setRightArm] = useState<Item>();
+    const [armorSet, setArmorSet] = useState<ArmorSet>({} as ArmorSet);
     const [leftWeapon, setLeftWeapon] = useState<Item>();
     const [rightWeapon, setRightWeapon] = useState<Item>();
 
@@ -26,22 +30,14 @@ export const Equipment = (props: EquipmentProp) => {
                 sortEquipment(updatedItem);
             });
         });
-    }, [props.equipment])
+    }, [props.equipment]);
 
     const sortEquipment = (equipment: Item) => {
         if (equipment.itemtype === 'Armor') {
             const armor = equipment as Armor;
-            switch (armor.type) {
-                case 'head': setHead(armor);
-                    break;
-                case 'body': setBody(armor);
-                    break;
-                case 'leftArm': setLeftArm(armor);
-                    break;
-                case 'rightArm': setRightArm(armor);
-                    break;
-                default: break;
-            }
+            const newEquipmentSet = {...armorSet}
+            newEquipmentSet[armor.type] = armor;
+            setArmorSet(newEquipmentSet);
         } else {
             const weapon = equipment as Weapon;
             if (weapon.type === 'twoHanded') {
@@ -54,12 +50,15 @@ export const Equipment = (props: EquipmentProp) => {
             }
         }
     }
-    return (<ul>
-        <li>Head: {head?.name}</li>
-        <li>Body: {body?.name}</li>
-        <li>Left arm: {leftArm?.name}</li>
-        <li>Right arm: {rightArm?.name}</li>
-        <li>Weapon : {rightWeapon?.name}</li>
-        <li>Weapon : {leftWeapon?.name}</li>
-    </ul>);
+    
+    return (
+    <ul>
+        <li>Head: {armorSet.head?.name}</li>
+        <li>Body: {armorSet.body?.name}</li>
+        <li>Left arm: {armorSet.leftArm?.name}</li>
+        <li>Right arm: {armorSet.rightArm?.name}</li>
+        <li>Left hand weapon : {leftWeapon?.name}</li>
+        <li>Right hand weapon : {rightWeapon?.name}</li>
+    </ul>
+    );
 }

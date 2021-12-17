@@ -1,5 +1,3 @@
-import { ItemWrapper } from "./wrappers/ItemWrapper";
-
 export interface Body{
     _id: string;
     name:string;
@@ -12,5 +10,4 @@ export interface Body{
     leftArm:boolean;
     rightArm:boolean;
     head:boolean;  
-    equipment:ItemWrapper[];
 }
