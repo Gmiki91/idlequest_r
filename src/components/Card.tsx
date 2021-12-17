@@ -1,18 +1,18 @@
 type CardProps = {
-    name:string;
-    pic:string;
-    level:number;
-    price:number;
-    qty:number;
+    details:{
+        name:string;
+        pic:string;
+        level:number;
+        price:number;
+    }
 
 }
 
-export const Card = (props: CardProps) =>(
+export const Card = ({details}: CardProps) =>(
     <>
-    <img src={props.pic}/>
-    <div>Name: { props.name }</div>
-    <div>level: { props.level }</div>
-    <div>price: { props.price }</div>
-    <div>qty: { props.qty }</div>
+    <img src={details.pic}/>
+    <div>Name: { details.name }</div>
+    <div>level: { details.level }</div>
+    <div>price: { details.price }</div>
     </>
 )

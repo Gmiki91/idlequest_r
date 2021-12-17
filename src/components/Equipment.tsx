@@ -7,6 +7,7 @@ import { Weapon } from '../models/items/Weapon';
 
 type EquipmentProp = {
     equipment: ItemWrapper[];
+    showItemDetails : (item:Item)=>void;
 }
 
 type ArmorSet = {
@@ -18,8 +19,8 @@ type ArmorSet = {
 
 export const Equipment = (props: EquipmentProp) => {
     const [armorSet, setArmorSet] = useState<ArmorSet>({} as ArmorSet);
-    const [leftWeapon, setLeftWeapon] = useState<Item>();
-    const [rightWeapon, setRightWeapon] = useState<Item>();
+    const [leftWeapon, setLeftWeapon] = useState<Item>({}as Item);
+    const [rightWeapon, setRightWeapon] = useState<Item>({}as Item);
 
     useEffect(() => {
         const ids: string[] = props.equipment.map(equipment => equipment._id);
@@ -53,12 +54,12 @@ export const Equipment = (props: EquipmentProp) => {
     
     return (
     <ul>
-        <li>Head: {armorSet.head?.name}</li>
+        <li onClick={()=>props.showItemDetails(armorSet.head)}>Head: {armorSet.head?.name}</li>
         <li>Body: {armorSet.body?.name}</li>
         <li>Left arm: {armorSet.leftArm?.name}</li>
         <li>Right arm: {armorSet.rightArm?.name}</li>
-        <li>Left hand weapon : {leftWeapon?.name}</li>
-        <li>Right hand weapon : {rightWeapon?.name}</li>
+        <li onClick={()=>props.showItemDetails(leftWeapon)} >Left hand weapon : {leftWeapon?.name}</li>
+        <li onClick={()=>props.showItemDetails(rightWeapon)} >Right hand weapon : {rightWeapon?.name}</li>
     </ul>
     );
 }
