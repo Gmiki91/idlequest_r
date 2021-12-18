@@ -4,7 +4,8 @@ const ItemSchema = mongoose.Schema({
     name:String,
     price: Number,
     level: Number,
-    durability:Number
+    durability:Number,
+    pic:String,
 },
     {
         discriminatorKey: 'itemtype',

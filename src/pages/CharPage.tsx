@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-// @ts-ignore
 import Modal from 'react-modal';
 import { Equipment } from "../components/Equipment";
 import { Image } from "../components/Image";
@@ -19,7 +18,7 @@ const CharPage = () => {
     const [user, setUser] = useState<User | null>(null);
     const [body, setBody] = useState<Body | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [itemDetails, setItemDetails] = useState<Item>({}as Item);
+    const [itemDetails, setItemDetails] = useState<Item>({} as Item);
 
     const init = useCallback(async () => {
         const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`)
@@ -33,42 +32,43 @@ const CharPage = () => {
 
     useEffect(() => {
         init();
-    },[init])
+    }, [init])
 
-    const toggleModal = ()=> {
-        setShowModal(prevState=>!prevState);
-      }
+    const toggleModal = () => {
+        setShowModal(prevState => !prevState);
+    }
 
-    const itemPopUp = (item:Item)=>{
-        console.log(item);
+    const itemPopUp = (item: Item) => {
         setItemDetails(item);
         toggleModal();
     }
-   
+
     return (body && user ?
         <div className="Container">
             <button onClick={toggleModal}>Click</button>
             <Modal
-             appElement={document.getElementById('root') as HTMLElement}
-             isOpen={showModal}
-             onRequestClose={toggleModal}>
-                  <Card 
-                  details={itemDetails}
-                  />
-                  </Modal>
+                className="Modal"
+                appElement={document.getElementById('root') as HTMLElement}
+                isOpen={showModal}
+                onRequestClose={toggleModal}>
+                <Card
+                    details={itemDetails}
+                    closeModal={toggleModal}
+                />
+            </Modal>
             <div className="FirstRow">
                 <Stats
                     strength={body.strength}
                     dexterity={body.dexterity}
-                    health={body.health}/>
-                <Image url={body.pic} />
+                    health={body.health} />
+                <Image pic={body.pic} />
                 <Equipment
                     equipment={user.equipmentList}
-                    showItemDetails={(item)=>itemPopUp(item)}/>
+                    showItemDetails={(item) => itemPopUp(item)} />
             </div>
             <div className="SecondRow">
-                <ItemList itemList={user.itemList} 
-                showItemDetails={(item)=>itemPopUp(item)} />
+                <ItemList itemList={user.itemList}
+                    showItemDetails={(item) => itemPopUp(item)} />
             </div>
         </div>
         : <div>spinner</div>

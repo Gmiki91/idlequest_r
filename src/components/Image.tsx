@@ -1,7 +1,7 @@
 type ImageProps = {
-    url: string
+    pic: string
 }
 
-export const Image = (props: ImageProps) => (<><img src={require(`../assets/${props.url}.png`).default} alt='zombie'/></>);
-
-
+export const Image = (props: ImageProps) => (<>
+   {props.pic? <img src={require(`../assets/${props.pic}.png`).default} alt={props.pic} /> : <div>no image</div>}
+</>);

@@ -5,5 +5,6 @@ export interface Item{
     price: number;
     level: number;
     durability: number;
+    qty:number;
     itemtype:'Armor' | 'Weapon'
 }
