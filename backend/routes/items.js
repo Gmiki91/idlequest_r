@@ -6,26 +6,70 @@ const Armor = require('../models/armor');
 
 router.get('/',async(req,res)=>{   
     const weapon1 = new Weapon({
-        type:'oneHanded',
-        name:'fakés',
+        name:'fejsze',
+        pic:'axe1',
         price:7,
         level:1,
         durability:4,
-        damage:2
+        damage:2,
+        type:'twoHanded'
     });
-    const armor1 = new Armor({
-        name:'sapesz',
-        type:'head',
-        price:5,
+    const weapon2 = new Weapon({
+        name:'fakés',
+        pic:'wooden_knife',
+        price:7,
         level:1,
-        durability:5,
-       
+        durability:4,
+        damage:2,
+        type:'oneHanded'
+    });
+    const weapon3 = new Weapon({
+        name:'fakard',
+        pic:'wooden_sword',
+        price:7,
+        level:1,
+        durability:4,
+        damage:2,
+        type:'oneHanded'
+    });
+    const item1 = new Item({
+        name:'Hat',
+        pic:'hat',
+        price:10,
+        level:1,
+        durability:15,
+        type:'head'
+    });
+    const item2 = new Item({
+        name:'T-shirt',
+        pic:'shirt',
+        price:10,
+        level:1,
+        durability:15,
+        type:'body'
+    });
+    const item3 = new Item({
+        name:'Jeans',
+        pic:'jeans',
+        price:10,
+        level:1,
+        durability:15,
+        type:'legs'
+    });
+
+    const item4 = new Item({
+        name:'Shoes',
+        pic:'shoe',
+        price:10,
+        level:1,
+        durability:15,
+        type:'foot'
     });
     try{
-        const items = await Promise.all([
-            Item.find()
-        ]);
-        return res.status(200).json({status: 'success', items:items});
+        const items = await Item.find();
+            
+     
+        return res.status(200).json({status: 'success', list:items});
     }catch(e){
         return res.status(500).json({status: 'error', message:e.message});
     }

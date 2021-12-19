@@ -7,6 +7,8 @@ export interface User {
     name: string;
     money:number;
     level:number;
+    leftHand:ItemWrapper;
+    rightHand:ItemWrapper;
     body: BodyWrapper ;
     bodyList: [BodyWrapper];
     itemList: [ItemWrapper];

@@ -1,11 +1,12 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
 const ItemSchema = mongoose.Schema({
-    name:String,
+    name: String,
+    pic: String,
     price: Number,
     level: Number,
-    durability:Number,
-    pic:String,
+    durability: Number,
+    type: 'head' | 'body' | 'legs' | 'foot' | 'oneHanded' | 'twoHanded'
 },
     {
         discriminatorKey: 'itemtype',

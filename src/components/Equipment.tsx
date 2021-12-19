@@ -1,65 +1,53 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Item } from '../models/items/Item';
-import { Armor } from '../models/items/Armor';
 import { ItemWrapper } from '../models/wrappers/ItemWrapper';
-import { Weapon } from '../models/items/Weapon';
 
 type EquipmentProp = {
     equipment: ItemWrapper[];
-    showItemDetails : (item:Item)=>void;
+    showItemDetails: (item: Item) => void;
+}
+type EquipmentSet = {
+    'head': Item;
+    'body': Item;
+    'legs': Item;
+    'foot': Item;
+    'leftHand':Item;
+    'rightHand':Item;
 }
 
-type ArmorSet = {
-    'head':Armor;
-    'body':Armor;
-    'leftArm':Armor;
-    'rightArm':Armor;
-}
-
-export const Equipment = (props: EquipmentProp) => {
-    const [armorSet, setArmorSet] = useState<ArmorSet>({} as ArmorSet);
-    const [leftWeapon, setLeftWeapon] = useState<Item>({}as Item);
-    const [rightWeapon, setRightWeapon] = useState<Item>({}as Item);
+export const Equipment = ({equipment, showItemDetails}: EquipmentProp) => {
+    const [equipmentSet, setEquipmentSet] = useState<EquipmentSet>({} as EquipmentSet);
 
     useEffect(() => {
-        const ids: string[] = props.equipment.map(equipment => equipment._id);
+        const ids: string[] = equipment.map(equipment => equipment._id);
+        if(ids.length > 0) {
         axios.get(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
-            response.data.items.forEach((item:Item) => {
-                const itemWrapper = props.equipment.find(equipment => item._id === equipment._id);
-                const updatedItem = { ...item, ...itemWrapper };
-                sortEquipment(updatedItem);
+            const items:Item[] = response.data.items;
+            let newEquipmentSet = { ...equipmentSet };
+            items.forEach(item=>{
+                if(item.type==='oneHanded'){
+                    const itemWrapper = equipment.find(equipment => item._id === equipment._id); //check which hand holds the item
+                    newEquipmentSet[itemWrapper!.type]=item; //adding weapon to the correct hand
+                }else if(item.type==='twoHanded'){
+                    newEquipmentSet['leftHand']=item; //adding weapon to both hands
+                    newEquipmentSet['rightHand']=item; //adding weapon to both hands
+                }else{
+                    newEquipmentSet[item.type]=item; //armor item.type and equipment.type is the same
+                }
             });
+            setEquipmentSet(newEquipmentSet);
         });
-    }, [props.equipment]);
+    }}, [equipment]);
 
-    const sortEquipment = (equipment: Item) => {
-        if (equipment.itemtype === 'Armor') {
-            const armor = equipment as Armor;
-            const newEquipmentSet = {...armorSet}
-            newEquipmentSet[armor.type] = armor;
-            setArmorSet(newEquipmentSet);
-        } else {
-            const weapon = equipment as Weapon;
-            if (weapon.type === 'twoHanded') {
-                setLeftWeapon(weapon);
-                setRightWeapon(weapon);
-            } else if (weapon.hand === 'left') {
-                setLeftWeapon(weapon);
-            } else if (weapon.hand === 'right') {
-                setRightWeapon(weapon);
-            }
-        }
-    }
-    
     return (
-    <ul>
-        <li onClick={()=>props.showItemDetails(armorSet.head)}>Head: {armorSet.head?.name}</li>
-        <li>Body: {armorSet.body?.name}</li>
-        <li>Left arm: {armorSet.leftArm?.name}</li>
-        <li>Right arm: {armorSet.rightArm?.name}</li>
-        <li onClick={()=>props.showItemDetails(leftWeapon)} >Left hand weapon : {leftWeapon?.name}</li>
-        <li onClick={()=>props.showItemDetails(rightWeapon)} >Right hand weapon : {rightWeapon?.name}</li>
-    </ul>
+        <ul>
+            <li onClick={() => showItemDetails(equipmentSet.head)}>Head: {equipmentSet.head?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.body)}>Body: {equipmentSet.body?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.legs)}>Legs: {equipmentSet.legs?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.foot)}>Feet: {equipmentSet.foot?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.rightHand)} >Left hand weapon : {equipmentSet.rightHand?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.leftHand)} >Right hand weapon : {equipmentSet.leftHand?.name}</li>
+        </ul>
     );
 }
