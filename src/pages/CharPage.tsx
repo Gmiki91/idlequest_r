@@ -15,40 +15,37 @@ const userId = '61b8a1b9668c7872bc8b26e8';
 
 const CharPage = () => {
 
-    const [user, setUser] = useState<User | null>(null);
-    const [body, setBody] = useState<Body | null>(null);
+    console.log('[CharPage] render');
+    const [data, setData] = useState<{ user: User, body: Body } | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [itemDetails, setItemDetails] = useState<Item>({} as Item);
     const [market, setMarket] = useState<Item[]>([]);
 
     const loadUser = useCallback(async () => {
-        axios.get(`http://192.168.31.203:3030/api/items/`).then(response=>{
-            if(market.length === 0){
-                console.log(response.data.list);
-                setMarket(response.data.list);
-            }
-        });
-        const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`)
-            .then(response => {
-                setUser(response.data);
-                return response.data;
-            });
-        axios.get<Body>(`http://192.168.31.203:3030/api/bodies/${userData.body._id}`)
-            .then(result => setBody({ ...result.data, ...userData.body })); //updating database Body with user Body 
-    }, [market]);
+        /*  axios.get(`http://192.168.31.203:3030/api/items/`).then(response=>{
+              if(market.length === 0){
+                  setMarket(response.data.list);
+              }
+          });*/
+        const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
+        const bodyData = await axios.get<Body>(`http://192.168.31.203:3030/api/bodies/${userData.body._id}`).then(response => response.data);
+        const body = { ...bodyData, ...userData.body } //updating database Body with user Body 
+        setData({ user: userData, body: body });
+    }, []);
 
     useEffect(() => {
-        console.log(market);
         loadUser();
-    }, [loadUser, market])
+    }, [])
 
     const toggleModal = () => {
         setShowModal(prevState => !prevState);
     }
 
     const itemPopUp = (item: Item) => {
-        setItemDetails(item);
-        toggleModal();
+        if (item) {
+            setItemDetails(item);
+            toggleModal();
+        }
     }
 
     const equipItem = useCallback(async (item: Item) => {
@@ -65,8 +62,8 @@ const CharPage = () => {
         await axios.post('http://192.168.31.203:3030/api/users/add', { item: item });
         loadUser();
     }, [loadUser]);
-   
-    return (body && user ?
+
+    return (data ?
         <div className="Container">
             <button onClick={toggleModal}>Click</button>
             <Modal
@@ -83,21 +80,21 @@ const CharPage = () => {
             </Modal>
             <div className="FirstRow">
                 <Stats
-                    strength={body.strength}
-                    dexterity={body.dexterity}
-                    health={body.health} />
-                <Image pic={body.pic} />
+                    strength={data.body.strength}
+                    dexterity={data.body.dexterity}
+                    health={data.body.health} />
+                <Image pic={data.body.pic} />
                 <Equipment
-                    equipment={user.equipmentList}
+                    equipment={data.user.equipmentList}
                     showItemDetails={(item) => itemPopUp(item)} />
             </div>
             <div className="SecondRow">
-                <ItemList itemList={user.itemList}
+                <ItemList itemList={data.user.itemList}
                     showItemDetails={(item) => itemPopUp(item)} />
-                    
+
             </div>
-            <div style={{marginTop: '10px'}}>
-            {market.map(item =><div key={item._id} onClick={()=>addItem(item)}>{item.name}</div>)}
+            <div style={{ marginTop: '10px' }}>
+                {market.map(item => <div key={item._id} onClick={() => addItem(item)}>{item.name}</div>)}
             </div>
         </div>
         : <div>spinner</div>
@@ -105,3 +102,7 @@ const CharPage = () => {
 }
 
 export default CharPage;
+
+/*
+  
+*/

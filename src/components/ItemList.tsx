@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Item } from '../models/items/Item';
 import { ItemWrapper } from "../models/wrappers/ItemWrapper";
 
@@ -11,21 +11,17 @@ export const ItemList = ({ itemList, showItemDetails }: ItemListProp) => {
     const [list, setList] = useState<Item[]>([]);
     const ids: string[] = itemList.map(item => item._id);
 
-    const getItems = useCallback(() => {
+    useEffect(() => {
+        const updatedItems:Item[] = [];
         axios.get(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
             itemList.forEach(userItem => {
                 const item = response.data.items.find((item: Item) => item._id === userItem._id);
                 const updatedItem = { ...item, qty: userItem.qty };
-                setList(prevState => [...prevState, updatedItem]);
+                updatedItems.push(updatedItem);
             });
+            setList([...updatedItems]);
         });
-    }, []);
-
-    useEffect(() => {
-        getItems();
-    }, [getItems])
-
-    
+    }, [itemList]);
 
     const listDisplayed = list.map(item => (<div
         key={item._id}
