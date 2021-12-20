@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
     equipmentList: [{
         _id:String,
         durability:Number,
-        type:'head' | 'body' | 'leftArm' | 'rightArm' |'leftHand' | 'rightHand'
+        type:'head' | 'body' | 'leftArm' | 'rightArm' |'leftHand' | 'rightHand' |'bothHands'
     }],
     itemList: [{
         _id:String,

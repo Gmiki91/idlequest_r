@@ -22,11 +22,11 @@ const CharPage = () => {
     const [market, setMarket] = useState<Item[]>([]);
 
     const loadUser = useCallback(async () => {
-        /*  axios.get(`http://192.168.31.203:3030/api/items/`).then(response=>{
+          axios.get(`http://192.168.31.203:3030/api/items/`).then(response=>{
               if(market.length === 0){
                   setMarket(response.data.list);
               }
-          });*/
+          });
         const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
         const bodyData = await axios.get<Body>(`http://192.168.31.203:3030/api/bodies/${userData.body._id}`).then(response => response.data);
         const body = { ...bodyData, ...userData.body } //updating database Body with user Body 
@@ -35,7 +35,7 @@ const CharPage = () => {
 
     useEffect(() => {
         loadUser();
-    }, [])
+    }, [showModal, loadUser])
 
     const toggleModal = () => {
         setShowModal(prevState => !prevState);
@@ -50,18 +50,18 @@ const CharPage = () => {
 
     const equipItem = useCallback(async (item: Item) => {
         await axios.put('http://192.168.31.203:3030/api/users/equip', { item: item });
-        loadUser();
-    }, [loadUser]);
+        toggleModal();
+    }, []);
 
     const unequipItem = useCallback(async (item: Item) => {
         await axios.put('http://192.168.31.203:3030/api/users/unequip', { item: item });
-        loadUser();
-    }, [loadUser]);
+        toggleModal();
+    }, []);
 
     const addItem = useCallback(async (item: Item) => {
         await axios.post('http://192.168.31.203:3030/api/users/add', { item: item });
-        loadUser();
-    }, [loadUser]);
+        toggleModal();
+    }, []);
 
     return (data ?
         <div className="Container">

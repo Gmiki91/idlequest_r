@@ -50,8 +50,8 @@ export const Equipment = ({ equipment, showItemDetails }: EquipmentProp) => {
             <li onClick={() => showItemDetails(equipmentSet.body)}>Body: {equipmentSet.body?.name}</li>
             <li onClick={() => showItemDetails(equipmentSet.legs)}>Legs: {equipmentSet.legs?.name}</li>
             <li onClick={() => showItemDetails(equipmentSet.foot)}>Feet: {equipmentSet.foot?.name}</li>
-            <li onClick={() => showItemDetails(equipmentSet.rightHand)} >Left hand weapon : {equipmentSet.rightHand?.name}</li>
-            <li onClick={() => showItemDetails(equipmentSet.leftHand)} >Right hand weapon : {equipmentSet.leftHand?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.rightHand)} >Right hand: {equipmentSet.rightHand?.name}</li>
+            <li onClick={() => showItemDetails(equipmentSet.leftHand)} >Left hand: {equipmentSet.leftHand?.name}</li>
         </ul>
     );
 }
