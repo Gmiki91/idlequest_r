@@ -37,17 +37,15 @@ router.put('/equip', async (req, res) => {
       const equipped = user.equipmentList.find(equipment => equipment.type === item.type);
       //remove already equipped from equipmentList
       if (equipped) {
-         user.equipmentList = removeItemFromList(user.equipmentList, item._id);
-         user.itemList = addItemToList(user.itemList, item._id, item.durability)
+          user.equipmentList = removeItemFromList(user.equipmentList, item._id);
+          user.itemList = addItemToList(user.itemList, item._id, item.durability)
       }
-
       //add the new equipment
       user.equipmentList.push({
          _id: item._id,
          durability: item.durability,
          type: item.type
       });
-
       user.itemList= removeItemFromList(user.itemList,item._id);
     
       await user.save();
@@ -60,7 +58,12 @@ router.put('/equip', async (req, res) => {
 const removeItemFromList = (list,id)=>{
    const removableItem = list.find(element=>element._id === id);
    const index = list.indexOf(removableItem);
-   return list.splice(index,1);
+   if(removableItem.qty>1){
+      list[index].qty-=1;
+      return list;
+   }
+   list.splice(index,1);
+   return list;
 };
 
 //qty needs to be raised if already in the list, else add with qty 1
