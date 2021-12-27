@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
+
 import './CharPage.css';
 import { Equipment } from "../components/Equipment";
 import { Image } from "../components/Image";
@@ -16,7 +17,7 @@ const userId = '61b8a1b9668c7872bc8b26e8';
 const CharPage = () => {
 
     console.log('[CharPage] render');
-    const [data, setData] = useState<{ user: User, body: Body } | null>(null);
+    const [data, setData] = useState<{ user: User, bodies:Body[]} | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [itemDetails, setItemDetails] = useState<Item>({} as Item);
     const [market, setMarket] = useState<Item[]>([]);
@@ -28,9 +29,8 @@ const CharPage = () => {
               }
           });
         const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
-        const bodyData = await axios.get<Body>(`http://192.168.31.203:3030/api/bodies/${userData.body._id}`).then(response => response.data);
-        const body = { ...bodyData, ...userData.body } //updating database Body with user Body 
-        setData({ user: userData, body: body });
+        const bodies = await axios.get<{status:string, bodies:Body[]}>(`http://192.168.31.203:3030/api/bodies/${userData.bodyIdList}`).then(response => response.data.bodies);
+        setData({ user: userData, bodies: bodies });
     }, []);
 
     useEffect(() => {
@@ -80,12 +80,12 @@ const CharPage = () => {
             </Modal>
             <div className="FirstRow">
                 <Stats
-                    strength={data.body.strength}
-                    dexterity={data.body.dexterity}
-                    health={data.body.health} />
-                <Image pic={data.body.pic} />
+                    strength={data.bodies[0].strength}
+                    dexterity={data.bodies[0].dexterity}
+                    health={data.bodies[0].health} />
+                <Image pic={data.bodies[0].pic} />
                 <Equipment
-                    equipment={data.user.equipmentList}
+                    equipment={data.bodies[0].equipmentList}
                     showItemDetails={(item) => itemPopUp(item)} />
             </div>
             <div className="SecondRow">

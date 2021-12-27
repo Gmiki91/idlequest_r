@@ -1,29 +1,12 @@
 const mongoose=require('mongoose');
+const Body = require('./body').schema;
 
 const userSchema = mongoose.Schema({
     email:String,
     name:String,
     money:Number,
     level:Number,
-    body: {
-        _id:String,
-        health: Number,
-        leftArm:Boolean,
-        rightArm:Boolean,
-        head:Boolean,
-    },
-    bodyList: [{
-        _id:String,
-        health: Number,
-        leftArm:Boolean,
-        rightArm:Boolean,
-        head:Boolean,
-    }],
-    equipmentList: [{
-        _id:String,
-        durability:Number,
-        type:'head' | 'body' | 'leftArm' | 'rightArm' |'leftHand' | 'rightHand' |'bothHands'
-    }],
+    bodyIdList: [String],
     itemList: [{
         _id:String,
         qty:Number,

@@ -4,6 +4,7 @@ const bodySchema = mongoose.Schema({
     name: String,
     pic: String,
     price: Number,
+    xp:Number,
     level: Number,
     strength: Number,
     dexterity: Number,
@@ -11,6 +12,11 @@ const bodySchema = mongoose.Schema({
     leftArm: Boolean,
     rightArm: Boolean,
     head: Boolean,
+    equipmentList:[{
+        _id:String,
+        durability:Number,
+        type:'head' | 'body' | 'leftArm' | 'rightArm' |'leftHand' | 'rightHand' |'bothHands'
+    }],
 }, { collection: 'bodies' }
 );
 

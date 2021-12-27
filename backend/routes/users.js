@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Item = require('../models/item');
 const User = require('../models/user');
+const Body = require('../models/body');
 
 router.get('/:id', async (req, res) => {
    const user = await User.findById(req.params.id);
@@ -14,6 +15,7 @@ router.post('/add', async (req, res) => {
    await user.save();
    res.status(200).send('saved');
 });
+
 const updatedUserLists = (user, item) => {
    user.equipmentList = removeItemFromList(user.equipmentList, item._id);
    user.itemList = addItemToList(user.itemList, item._id, item.durability);
@@ -22,6 +24,7 @@ const updatedUserLists = (user, item) => {
 router.put('/unequip', async (req, res) => {
    try {
       let user = await User.findById('61b8a1b9668c7872bc8b26e8');
+      let body = await Body.findById('61c9e867b18110c2bb703481');
       const item = req.body.item;
 
       user = updatedUserLists(user, item);
@@ -36,6 +39,7 @@ router.put('/unequip', async (req, res) => {
 router.put('/equip', async (req, res) => {
    try {
       let user = await User.findById('61b8a1b9668c7872bc8b26e8');
+      let body = await Body.findById('61c9e867b18110c2bb703481');
       const item = req.body.item;
 
       let type;

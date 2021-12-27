@@ -1,4 +1,4 @@
-import { BodyWrapper } from "./wrappers/BodyWrapper";
+import { Body } from "./Body";
 import { ItemWrapper } from "./wrappers/ItemWrapper";
 
 export interface User {
@@ -6,11 +6,8 @@ export interface User {
     email: string;
     name: string;
     money:number;
-    level:number;
     leftHand:ItemWrapper;
     rightHand:ItemWrapper;
-    body: BodyWrapper ;
-    bodyList: [BodyWrapper];
-    itemList: [ItemWrapper];
-    equipmentList:[ItemWrapper];
+    bodyIdList: string[];
+    itemList: ItemWrapper[];
 }

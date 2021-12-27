@@ -4,4 +4,7 @@ export interface BodyWrapper {
     leftArm:boolean;
     rightArm:boolean;
     head:boolean;  
+    xp:number;
+    level:number;
+    
 }
