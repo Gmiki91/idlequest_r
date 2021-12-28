@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Item = require('./item').schema;
 const bodySchema = mongoose.Schema({
     name: String,
     pic: String,
@@ -12,11 +12,7 @@ const bodySchema = mongoose.Schema({
     leftArm: Boolean,
     rightArm: Boolean,
     head: Boolean,
-    equipmentList:[{
-        _id:String,
-        durability:Number,
-        type:'head' | 'body' | 'leftArm' | 'rightArm' |'leftHand' | 'rightHand' |'bothHands'
-    }],
+    equipmentList:[Item],
 }, { collection: 'bodies' }
 );
 

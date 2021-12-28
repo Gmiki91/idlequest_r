@@ -1,4 +1,4 @@
-import { ItemWrapper } from "./wrappers/ItemWrapper";
+import { Item } from "./items/Item";
 
 export interface Body{
     _id: string;
@@ -13,5 +13,5 @@ export interface Body{
     rightArm:boolean;
     head:boolean;  
     xp:number;
-    equipmentList:[ItemWrapper];
+    equipmentList:[Item];
 }

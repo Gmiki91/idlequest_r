@@ -1,10 +1,7 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Item } from '../models/items/Item';
-import { ItemWrapper } from '../models/wrappers/ItemWrapper';
 
 type EquipmentProp = {
-    equipment: ItemWrapper[];
+    equipment: Item[];
     showItemDetails: (item: Item) => void;
 }
 type EquipmentSet = {
@@ -17,32 +14,18 @@ type EquipmentSet = {
 }
 
 export const Equipment = ({ equipment, showItemDetails }: EquipmentProp) => {
-    const [equipmentSet, setEquipmentSet] = useState<EquipmentSet>({} as EquipmentSet);
 
-    console.log("[Equipment] render");
-    useEffect(() => {
-        const ids: string[] = equipment.map(equipment => equipment._id);
-        let newEquipmentSet = {} as EquipmentSet;
-        if (ids.length > 0) {
-            axios.get(`http://192.168.31.203:3030/api/items/${ids}`).then(response => {
-                const items: Item[] = response.data.items;
-                items.forEach(item => {
-                    if (item.type === 'oneHanded') {
-                        const itemWrapper = equipment.find(equipment => item._id === equipment._id); //check which hand holds the item
-                        newEquipmentSet[itemWrapper!.type] = item; //adding weapon to the correct hand
-                    } else if (item.type === 'twoHanded') {
-                        newEquipmentSet['leftHand'] = item; //adding weapon to both hands
-                        newEquipmentSet['rightHand'] = item; //adding weapon to both hands
-                    } else {
-                        newEquipmentSet[item.type] = item; //armor item.type and equipment.type is the same
-                    }
-                });
-                setEquipmentSet({ ...newEquipmentSet });
-            });
-        }else{
-            setEquipmentSet({ ...newEquipmentSet });
+    //console.log("[Equipment] render");
+
+    const equipmentSet = {} as EquipmentSet;
+    equipment.forEach(item => {
+        if (item.type === 'twoHanded') {
+            equipmentSet['leftHand'] = item; //adding weapon to both hands
+            equipmentSet['rightHand'] = item; //adding weapon to both hands
+        } else {
+            equipmentSet[item.type] = item; //armor item.type and equipment.type is the same
         }
-    }, [equipment]);
+    });
 
     return (
         <ul>

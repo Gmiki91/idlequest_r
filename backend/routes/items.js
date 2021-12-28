@@ -20,7 +20,7 @@ router.get('/',async(req,res)=>{
         level:1,
         durability:4,
         damage:2,
-        type:'oneHanded'
+        type:'rightHand'
     });
     const weapon3 = new Weapon({
         name:'fakard',
@@ -29,7 +29,7 @@ router.get('/',async(req,res)=>{
         level:1,
         durability:4,
         damage:2,
-        type:'oneHanded'
+        type:'leftHand'
     });
     const item1 = new Item({
         name:'Hat',
@@ -66,8 +66,7 @@ router.get('/',async(req,res)=>{
     });
     try{
         const items = await Item.find();
-            
-     
+   
         return res.status(200).json({status: 'success', list:items});
     }catch(e){
         return res.status(500).json({status: 'error', message:e.message});

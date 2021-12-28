@@ -16,7 +16,7 @@ const userId = '61b8a1b9668c7872bc8b26e8';
 
 const CharPage = () => {
 
-    console.log('[CharPage] render');
+    //console.log('[CharPage] render');
     const [data, setData] = useState<{ user: User, bodies:Body[]} | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [itemDetails, setItemDetails] = useState<Item>({} as Item);
@@ -28,9 +28,9 @@ const CharPage = () => {
                   setMarket(response.data.list);
               }
           });
-        const userData = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
-        const bodies = await axios.get<{status:string, bodies:Body[]}>(`http://192.168.31.203:3030/api/bodies/${userData.bodyIdList}`).then(response => response.data.bodies);
-        setData({ user: userData, bodies: bodies });
+        const user = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
+        const bodies = user.bodyList;//await axios.get<{status:string, bodies:Body[]}>(`http://192.168.31.203:3030/api/bodies/${userData.bodyList}`).then(response => response.data.bodies);
+        setData({ user: user, bodies: bodies });
     }, []);
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const CharPage = () => {
 
     const addItem = useCallback(async (item: Item) => {
         await axios.post('http://192.168.31.203:3030/api/users/add', { item: item });
-        toggleModal();
+        
     }, []);
 
     return (data ?

@@ -6,5 +6,5 @@ export interface Item{
     level: number;
     durability: number;
     qty:number;
-    type:'head' | 'body' | 'legs'|'foot'| 'oneHanded' | 'twoHanded' //| 'leftHand' |'rightHand';
+    type:'head' | 'body' | 'legs'|'foot' | 'twoHanded' | 'leftHand' |'rightHand';
 }

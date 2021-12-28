@@ -6,7 +6,7 @@ const ItemSchema = mongoose.Schema({
     price: Number,
     level: Number,
     durability: Number,
-    type: 'head' | 'body' | 'legs' | 'foot' | 'oneHanded' | 'twoHanded'
+    type: 'head' | 'body' | 'legs' | 'foot' | 'twoHanded' | 'leftHand' |'rightHand'
 },
     {
         discriminatorKey: 'itemtype',
