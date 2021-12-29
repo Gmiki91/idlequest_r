@@ -20,14 +20,8 @@ const CharPage = () => {
     const [data, setData] = useState<{ user: User, bodies:Body[]} | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [itemDetails, setItemDetails] = useState<Item>({} as Item);
-    const [market, setMarket] = useState<Item[]>([]);
 
     const loadUser = useCallback(async () => {
-          axios.get(`http://192.168.31.203:3030/api/items/`).then(response=>{
-              if(market.length === 0){
-                  setMarket(response.data.list);
-              }
-          });
         const user = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
         const bodies = user.bodyList;//await axios.get<{status:string, bodies:Body[]}>(`http://192.168.31.203:3030/api/bodies/${userData.bodyList}`).then(response => response.data.bodies);
         setData({ user: user, bodies: bodies });
@@ -58,11 +52,6 @@ const CharPage = () => {
         toggleModal();
     }, []);
 
-    const addItem = useCallback(async (item: Item) => {
-        await axios.post('http://192.168.31.203:3030/api/users/add', { item: item });
-        
-    }, []);
-
     return (data ?
         <div className="Container">
             <button onClick={toggleModal}>Click</button>
@@ -91,10 +80,6 @@ const CharPage = () => {
             <div className="SecondRow">
                 <ItemList itemList={data.user.itemList}
                     showItemDetails={(item) => itemPopUp(item)} />
-
-            </div>
-            <div style={{ marginTop: '10px' }}>
-                {market.map(item => <div key={item._id} onClick={() => addItem(item)}>{item.name}</div>)}
             </div>
         </div>
         : <div>spinner</div>
