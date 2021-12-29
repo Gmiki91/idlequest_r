@@ -1,25 +1,26 @@
 import { Item } from "../models/items/Item";
 import { Image } from "./Image"
 
+export type type = 'Buy' | 'Sell' | 'Equip' | 'Unequip';
+
 type CardProps = {
-    details:Item,
+    item: Item,
+    type: type,
     closeModal: () => void,
-    equip:(item:Item)=>void
-    unequip:(item:Item)=>void
+    confirmButton: (item: Item) => void,
 }
 
-export const Card = ({ details, closeModal, equip, unequip }: CardProps) =>{
-    const isEquipped = details.qty ? true : false;
+export const Card = ({ item, type, confirmButton, closeModal }: CardProps) => {
     return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding:25,backgroundColor: 'rgba(56, 61, 69,0.7)', borderColor: 'black', borderWidth:2, borderStyle:'solid', borderRadius:16}}>
-        <Image pic={details.pic} />
-        <div>Name: {details.name}</div>
-        <div>level: {details.level}</div>
-        <div>price: {details.price}</div>
-        {isEquipped ? <div>quantity: {details.qty}</div>:null}
-        <button onClick={closeModal}>Cancel</button>
-        {isEquipped ? <button onClick={()=>equip(details)}>Equip</button> : <button  onClick={()=>unequip(details)}>Unequip</button>}
-    </div>
-)
+        <div style={{ display: 'flex', flexDirection: 'column', padding: 25, backgroundColor: 'rgba(56, 61, 69,0.7)', borderColor: 'black', borderWidth: 2, borderStyle: 'solid', borderRadius: 16 }}>
+            <Image pic={item.pic} />
+            <div>Name: {item.name}</div>
+            <div>level: {item.level}</div>
+            <div>price: {item.price}</div>
+            <div>durability:{item.durability}</div>
+            <button onClick={closeModal}>Cancel</button>
+            <button onClick={() => confirmButton(item)}>{type}</button>
+        </div>
+    )
 
 }

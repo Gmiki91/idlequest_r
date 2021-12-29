@@ -9,7 +9,7 @@ import { Stats } from "../components/Stats";
 import { User } from '../models/User';
 import { Body } from '../models/Body'
 import { ItemList } from '../components/ItemList';
-import { Card } from '../components/Card';
+import { Card, type as CardType } from '../components/Card';
 import { Item } from '../models/items/Item';
 
 const userId = '61b8a1b9668c7872bc8b26e8';
@@ -17,9 +17,10 @@ const userId = '61b8a1b9668c7872bc8b26e8';
 const CharPage = () => {
 
     //console.log('[CharPage] render');
-    const [data, setData] = useState<{ user: User, bodies:Body[]} | null>(null);
+    const [data, setData] = useState<{ user: User, bodies: Body[] } | null>(null);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [itemDetails, setItemDetails] = useState<Item>({} as Item);
+    const [item, setItem] = useState<Item>({} as Item);
+    const [cardType, setCardType] = useState<CardType>('Buy');
 
     const loadUser = useCallback(async () => {
         const user = await axios.get<User>(`http://192.168.31.203:3030/api/users/${userId}`).then(response => response.data);
@@ -35,36 +36,38 @@ const CharPage = () => {
         setShowModal(prevState => !prevState);
     }
 
-    const itemPopUp = (item: Item) => {
-        if (item) {
-            setItemDetails(item);
+    const itemPopUp = (item: Item, type:CardType) => {
+            setItem(item);
+            setCardType(type);
             toggleModal();
-        }
+        
     }
 
-    const equipItem = useCallback(async (item: Item) => {
-        await axios.put('http://192.168.31.203:3030/api/users/equip', { item: item });
+    const confirmButtonClicked = async (item: Item) => {
+        console.log('confirmbuttonclicked ',cardType);
+        switch (cardType) {
+            case 'Equip':
+                await axios.put('http://192.168.31.203:3030/api/users/equip', { item: item });
+                break;
+            case 'Unequip':
+                await axios.put('http://192.168.31.203:3030/api/users/unequip', { item: item });
+                break;
+        }
         toggleModal();
-    }, []);
-
-    const unequipItem = useCallback(async (item: Item) => {
-        await axios.put('http://192.168.31.203:3030/api/users/unequip', { item: item });
-        toggleModal();
-    }, []);
+    }
 
     return (data ?
         <div className="Container">
-            <button onClick={toggleModal}>Click</button>
             <Modal
                 className="Modal"
                 appElement={document.getElementById('root') as HTMLElement}
                 isOpen={showModal}
                 onRequestClose={toggleModal}>
                 <Card
-                    details={itemDetails}
+                    item={item}
+                    type={cardType}
                     closeModal={toggleModal}
-                    equip={(item) => equipItem(item)}
-                    unequip={(item) => unequipItem(item)}
+                    confirmButton={(item) => confirmButtonClicked(item)}
                 />
             </Modal>
             <div className="FirstRow">
@@ -75,11 +78,11 @@ const CharPage = () => {
                 <Image pic={data.bodies[0].pic} />
                 <Equipment
                     equipment={data.bodies[0].equipmentList}
-                    showItemDetails={(item) => itemPopUp(item)} />
+                    showItemDetails={(item) => itemPopUp(item, 'Unequip')} />
             </div>
             <div className="SecondRow">
                 <ItemList itemList={data.user.itemList}
-                    showItemDetails={(item) => itemPopUp(item)} />
+                    showItemDetails={(item) => itemPopUp(item, 'Equip')} />
             </div>
         </div>
         : <div>spinner</div>

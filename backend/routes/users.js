@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ObjectId = require('mongoose').Types.ObjectId;
-const Item = require('../models/item');
 const User = require('../models/user');
-const Body = require('../models/body');
 /*
 router.get('/', async(req,res)=>{
    const user = await User.findById('61b8a1b9668c7872bc8b26e8');
@@ -31,17 +29,26 @@ router.get('/:id', async (req, res) => {
    res.status(200).json(user);
 });
 
-router.post('/add', async (req, res) => {
+router.put('/buyItem', async (req, res) => {
    const user = await User.findById('61b8a1b9668c7872bc8b26e8');
    const item = {...req.body.item, _id:new ObjectId()}
    user.itemList.push(item);
+   user.money -=item.price;
    await user.save();
-   res.status(200).send('saved');
+   res.status(200).send('bought item');
 });
 
+router.put('/sellItem', async (req, res)=>{
+   const user = await User.findById('61b8a1b9668c7872bc8b26e8');
+   const item = req.body.item;
+   removeItemFromList(user.itemList,item._id);
+   user.money +=item.price;
+   await user.save();
+   res.status(200).send('sold item');
+})
+
 const moveFromEquipmentToItemList = (itemList, equipmentList, item) => {
-   equipmentList = removeItemFromList(equipmentList, item._id);
-   console.log(item);
+   removeItemFromList(equipmentList, item._id);
    itemList.push(item);
 }
 router.put('/unequip', async (req, res) => {
@@ -75,7 +82,7 @@ router.put('/equip', async (req, res) => {
       minion.equipmentList.push({...item, type:type});
 
       //remove from iList
-      user.itemList = removeItemFromList(user.itemList, item._id);
+      removeItemFromList(user.itemList, item._id);
 
       await user.save();
       res.status(200).json({ status: 'success' });
@@ -126,7 +133,6 @@ const removeItemFromList = (list, id) => {
    const removableItem = list.find(element =>element._id.toString() === id.toString());
    const index = list.indexOf(removableItem);
    list.splice(index, 1);
-   return list;
 };
 
 module.exports = router;
